@@ -3,6 +3,7 @@ const { engine} = require ('express-handlebars');
 const myconnection = require('express-myconnection');
 const bodyParser = require('body-parser');
 const mysql = require('mysql');
+const TaskRoutes = require('./routes/task');
 
 const app = express();
 app.set('port', 4000);
@@ -27,7 +28,9 @@ app.listen(app.get('port'), () => {
     console.log("listening on port " , app.get('port'));
 });
 
+app.use('/', TaskRoutes);
+
 app.get("/", (req,res) => {
-    res.render('index');
+    res.render('home');
 });
 
