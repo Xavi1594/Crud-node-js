@@ -1,36 +1,38 @@
-const express = require ('express');
-const { engine} = require ('express-handlebars');
+const express = require('express');
+const { engine } = require('express-handlebars');
 const myconnection = require('express-myconnection');
 const bodyParser = require('body-parser');
 const mysql = require('mysql');
-const TaskRoutes = require('./routes/task');
+const tasksRoutes = require('./routes/tasks');
 
 const app = express();
 app.set('port', 4000);
 
-app.set('views', __dirname + '/views');
-app.engine('.html', engine ( {
-    extname: '.html'
-}))
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
+app.use(bodyParser.json());
 
-app.set("view engine", "html");
+app.set('views', __dirname + '/views');
+app.engine('.hbs', engine({
+  extname: '.hbs',
+}));
+app.set('view engine', 'hbs');
 
 app.use(myconnection(mysql, {
-    host: 'localhost',
-    user: 'root',
-    password: "",
-    port: 3306,
-    database: "crudnode"
-
-}));
+  host: 'localhost',
+  user: 'root',
+  password: '',
+  port: 3306,
+  database: 'crudnode'
+}, 'single'));
 
 app.listen(app.get('port'), () => {
-    console.log("listening on port " , app.get('port'));
+  console.log('Listening on port ', app.get('port'));
 });
 
-app.use('/', TaskRoutes);
+app.use('/', tasksRoutes);
 
-app.get("/", (req,res) => {
-    res.render('home');
+app.get('/', (req, res) => {
+  res.render('home');
 });
-
